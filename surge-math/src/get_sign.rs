@@ -1,3 +1,5 @@
+use std::arch::asm;
+
 crate::ix!();
 
 /// Returns the sign of an i32 integer as -1 or 1.
@@ -8,11 +10,10 @@ crate::ix!();
 /// On other architectures, the function uses inline
 /// assembly.
 ///
-#[cfg(target_arch = "x86_64")]
-pub fn sign(x: i32) -> i32 
-{
-    match x < 0 { 
-        true  => -1,
+#[cfg(any(target_arch = "x86_64", target_arch = "aarch64"))]
+pub fn sign(x: i32) -> i32 {
+    match x < 0 {
+        true => -1,
         false => 1,
     }
 }
@@ -26,7 +27,7 @@ pub fn sign(x: i32) -> i32
 /// Note that inline assembly is only supported on the
 /// nightly Rust.
 ///
-#[cfg(not(target_arch = "x86_64"))]
+#[cfg(all(not(target_arch = "x86_64"), not(target_arch = "aarch64")))]
 pub fn sign(x: i32) -> i32 {
     let result: i32;
     unsafe {
@@ -41,5 +42,3 @@ pub fn sign(x: i32) -> i32 {
     }
     result
 }
-
-
