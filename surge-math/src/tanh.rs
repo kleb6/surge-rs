@@ -1,7 +1,7 @@
 crate::ix!();
 
 #[allow(clippy::many_single_char_names)]
-#[cfg(target_arch = "x86_64")] #[inline] 
+#[cfg(target_arch = "x86_64")] #[inline]
 pub fn tanh7_ps(x: __m128) -> __m128
 {
     unsafe {
@@ -17,12 +17,12 @@ pub fn tanh7_ps(x: __m128) -> __m128
         x4 =  _mm_mul_ps(x4, xx)               ;
         y  =  _mm_add_ps(y, _mm_mul_ps(c, x4)) ;
 
-        _mm_mul_ps(y, x) 
+        _mm_mul_ps(y, x)
     }
 }
 
 
-#[cfg(target_arch = "x86_64")] #[inline] 
+#[cfg(target_arch = "x86_64")] #[inline]
 pub fn tanh_fast32(x_in: f32) -> f32 {
 
     assert!(within_range(0.0, x_in, 1.0));
@@ -35,7 +35,7 @@ pub fn tanh_fast32(x_in: f32) -> f32 {
 
     let mut denom: f32 = 1.0 + x + xx + (a * x * xx);
 
-    unsafe{ _mm_store_ss(&mut denom, 
+    unsafe{ _mm_store_ss(&mut denom,
         _mm_rcp_ss(_mm_load_ss(&denom)))};
 
     match x_in > 0.0 {
@@ -45,7 +45,8 @@ pub fn tanh_fast32(x_in: f32) -> f32 {
 }
 
 #[allow(clippy::many_single_char_names)]
-#[inline] pub fn tanh7_ss(x: __m128 ) -> __m128
+#[cfg(target_arch = "x86_64")] #[inline]
+pub fn tanh7_ss(x: __m128 ) -> __m128
 {
     unsafe {
         let a: __m128      = _mm_set1_ps(-1.0 / 3.0);
@@ -63,9 +64,10 @@ pub fn tanh_fast32(x_in: f32) -> f32 {
 }
 
 #[allow(clippy::many_single_char_names)]
-#[inline] pub fn tanh7_f64(x: f64 ) -> f64
+#[cfg(target_arch = "x86_64")] #[inline]
+pub fn tanh7_f64(x: f64 ) -> f64
 {
-    let a: f64 = -1.0 / 3.0; 
+    let a: f64 = -1.0 / 3.0;
     let b: f64 = 2.0 / 15.0;
     let c: f64 = -17.0 / 315.0;
     // return tanh(x);
@@ -84,6 +86,7 @@ pub fn tanh_fast32(x_in: f32) -> f32 {
 }
 
 #[allow(clippy::many_single_char_names)]
+#[cfg(target_arch = "x86_64")]
 pub fn tanh7_block<NQ>(xb: *mut f32, nquads: NQ)
     where <NQ as std::convert::TryInto<u32>>::Error: std::fmt::Debug, NQ: TryInto<u32>
 {
@@ -96,8 +99,8 @@ pub fn tanh7_block<NQ>(xb: *mut f32, nquads: NQ)
         let upper_bound: __m128 = _mm_set1_ps(1.1390);
         let lower_bound: __m128 = _mm_set1_ps(-1.1390);
 
-        let mut t: [__m128; 4]  = [z128![]; 4]; 
-        let mut x: [__m128; 4]  = [z128![]; 4]; 
+        let mut t: [__m128; 4]  = [z128![]; 4];
+        let mut x: [__m128; 4]  = [z128![]; 4];
         let mut xx: [__m128; 4] = [z128![]; 4];
 
         for i  in (0..nquads).step_by(4)
@@ -183,9 +186,9 @@ pub fn tanh7_block<NQ>(xb: *mut f32, nquads: NQ)
     y * x_in
 }
 
-pub fn shafted_tanh(x: f64) -> f64 
+pub fn shafted_tanh(x: f64) -> f64
 {
-    (x.exp() - (-x * 1.2).exp()) / 
+    (x.exp() - (-x * 1.2).exp()) /
         ((x).exp() + (-x).exp())
 }
 
