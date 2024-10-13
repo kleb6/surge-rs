@@ -1,0 +1,7 @@
+[package]
+name = "surge-aarch64"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies.surge-imports]
+path = "../surge-imports"
