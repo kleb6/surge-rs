@@ -1,5 +1,7 @@
 [dependencies]
 criterion = "0.3"
+[dependencies.surge-aarch64]
+path = "../surge-aarch64"
 [dependencies.surge-errors]
 path = "../surge-errors"
 [dependencies.surge-imports]
