@@ -1,13 +1,14 @@
 #![allow(unused_imports)]
 
 /*
-#[macro_export] macro_rules! xt { 
-    ($x:ident) => { 
-        #[cfg(test)] mod $x; 
+#[macro_export] macro_rules! xt {
+    ($x:ident) => {
+        #[cfg(test)] mod $x;
     }
 }
 */
 
+#[cfg(target_arch = "x86_64")]
 pub fn assert_m128_eq(a: __m128, b: __m128, epsilon: f32) {
 
     let a_arr: [f32; 4] = unsafe { std::mem::transmute(a) };
@@ -24,9 +25,7 @@ pub fn assert_m128_eq(a: __m128, b: __m128, epsilon: f32) {
     }
 }
 
-#[cfg(target_arch = "x86_64")] 
-pub use core::arch::x86_64::*;
-
+#[cfg(target_arch = "x86_64")]
 pub use core::arch::x86_64::*;
 
 pub use disable_macro::disable;
